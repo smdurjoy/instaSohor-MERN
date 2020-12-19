@@ -1,11 +1,56 @@
-import React from 'react'
-import {  BrowserRouter } from 'react-router-dom';
-import AppRoute from './routes/AppRoute'
+import React, { useState, useEffect } from 'react'
+import Home from './components/Home/Home'
+import Profile from './components/Profile/Profile'
+import CheckSignin from './components/Signin/Signin'
+import Signup from './components/Signup/Signup'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import UserContext from './context/UserContext'
+import Axios from 'axios'
+import url from './BackendUrl'
 
 function App() {
+    const [ userData, setUserData ] = useState({
+        token: undefined,
+        user: undefined
+    })
+
+    useEffect(() => {
+        const checkLoogedIn = async () => {
+            let token = localStorage.getItem('x-auth-token');
+            if(token === null) {
+                localStorage.setItem('x-auth-token', '')
+                token = ''
+            }
+
+            const tokenRes = await Axios.post(`${url}/isTokenValid`, null, {
+                headers: { 'x-auth-token': token }
+            })
+
+            if(tokenRes.data) {
+                const userRes = await Axios.get(`${url}/`, {
+                    headers: { 'x-auth-token': token }
+                })
+                
+                setUserData({
+                    token,
+                    user: userRes.data
+                })
+            }
+        }
+
+        checkLoogedIn()
+    }, [])
+
     return (
         <BrowserRouter>
-            <AppRoute />
+            <UserContext.Provider value={{ userData, setUserData }}>
+                <Switch>
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/profile" component={Profile}/>
+                    <Route path="/signin" component={CheckSignin}/>
+                    <Route path="/signup" component={Signup}/>
+                </Switch>
+            </UserContext.Provider>
         </BrowserRouter>
     )
 }

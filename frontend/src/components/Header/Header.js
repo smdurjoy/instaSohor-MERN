@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     Nav,
     Navbar,
@@ -11,8 +11,10 @@ import {
     DropdownMenu
 } from 'reactstrap';
 
-import profilephoto from '../../assets/images/users/1.jpg';
+import profilephoto from '../../assets/images/users/profile-user.png';
 import brandLogo from '../../assets/images/brang-logo.png';
+import { useHistory } from 'react-router-dom'
+import UserContext from '../../context/UserContext'
 
 const Header = () => {
 
@@ -21,6 +23,18 @@ const Header = () => {
     /*--------------------------------------------------------------------------------*/
     const showMobilemenu = () => {
         document.getElementById('main-wrapper').classList.toggle('show-sidebar');
+    }
+
+    const history = useHistory()
+    const { setUserData } = useContext(UserContext)
+
+    const onLogout = () => {
+        setUserData({
+            token: undefined,
+            user: undefined
+        })
+        localStorage.setItem('x-auth-token', '')
+        history.push('/signin')
     }
 
     return (
@@ -70,7 +84,7 @@ const Header = () => {
                                     <i className="ti-settings mr-1 ml-1" /> Settings
                   </DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem href="/pages/login">
+                                <DropdownItem onClick={onLogout}>
                                     <i className="fa fa-power-off mr-1 ml-1" /> Logout
                   </DropdownItem>
                                 <DropdownItem divider />
