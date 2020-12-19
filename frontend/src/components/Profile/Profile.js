@@ -4,7 +4,9 @@ import Layout from '../../layouts/fulllayout'
 const yoo = props => {
     return (
       <Layout>
-        <div>this is from new component.</div>
+        <div>
+          <h2>this is from new component</h2>
+        </div>
       </Layout>
     );
   };

@@ -4,8 +4,8 @@ import React from 'react';
 const Footer = () => {
     return (
         <footer className="footer text-center">
-            All Rights Reserved by smdurjoy. Designed and Developed by{' '}
-            <a href="https://smdurjoy.com">smdurjoy</a>.
+            © smdurjoy all rights reserved. Designed and Developed by{' '}
+            <a rel="noopener noreferrer" target="_blank" href="https://smdurjoy.com">smdurjoy</a>.
         </footer>
     );
 }
