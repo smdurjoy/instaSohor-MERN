@@ -13,6 +13,7 @@ import Axios from 'axios'
 import url from '../../BackendUrl'
 import { useHistory, Redirect } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
+import ErrorNotice from '../../ErrorNotice'
 
 function Copyright() {
   return (
@@ -53,25 +54,46 @@ export default function SignUp() {
   const [ email, setEmail ] = useState()
   const [ password, setPassword ] = useState()
   const [ passwordCheck, setPasswordCheck ] = useState()
+  const [ error, setError ] = useState()
+  const [ buttonText, setButtonText ] = useState('Sign in')
+  const [ isDisabled, setIsDisabled ] = useState(false)
+
   const { setUserData } = useContext(UserContext)
   const history = useHistory()
 
+  const [visible, setVisible] = useState(true)
+  const onDismiss = () => {
+    setVisible(false)
+    setError(undefined)
+  }
+
   const onSignup = async (e) => {
     e.preventDefault()
-    const newUser = { name, username, email, password, passwordCheck }
-    await Axios.post(`${url}/register`, newUser)
-    
-    const loginRes = await Axios.post(`${url}/login`, {
-      username,
-      password
-    })
+    setButtonText('Signing up ...')
+    setIsDisabled(true)
 
-    setUserData({
-      token: loginRes.data.token,
-      user: loginRes.data.user
-    })
-    localStorage.setItem('x-auth-token', loginRes.data.token)
-    history.push('/')
+    try {
+      const newUser = { name, username, email, password, passwordCheck }
+      await Axios.post(`${url}/register`, newUser)
+      
+      const loginRes = await Axios.post(`${url}/login`, {
+        username,
+        password
+      })
+
+      setUserData({
+        token: loginRes.data.token,
+        user: loginRes.data.user
+      })
+      localStorage.setItem('x-auth-token', loginRes.data.token)
+      history.push('/')
+
+    } catch(err) {
+      err.response.data.msg && setError(err.response.data.msg)
+      setVisible(true)
+      setButtonText('Sign in')
+      setIsDisabled(false)
+    }
   }
 
   const classes = useStyles();
@@ -94,6 +116,9 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        { error && (
+          <ErrorNotice message={error} visible={visible} onDismiss={onDismiss}/> 
+        )}
         <form className={classes.form} onSubmit={onSignup}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -165,8 +190,9 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={isDisabled}
           >
-            Sign Up
+            {buttonText}
           </Button>
           <Grid container justify="flex-end">
             <Grid item>

@@ -15,6 +15,7 @@ import profilephoto from '../../assets/images/users/profile-user.png';
 import brandLogo from '../../assets/images/brang-logo.png';
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
+import DehazeIcon from '@material-ui/icons/Dehaze';
 
 const Header = () => {
 
@@ -61,7 +62,7 @@ const Header = () => {
                     {/* Mobile View Toggler  [visible only after 768px screen]                         */}
                     {/*--------------------------------------------------------------------------------*/}
                     <button className="btn-link nav-toggler d-block d-md-none" onClick={() => showMobilemenu()}>
-                        <i className="ti-menu ti-close" />
+                        <DehazeIcon/>
                     </button>
                 </div>
                 <Collapse className="navbarbg" navbar data-navbarbg="skin1" >
@@ -84,16 +85,17 @@ const Header = () => {
                                     <i className="ti-settings mr-1 ml-1" /> Settings
                   </DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem onClick={onLogout}>
-                                    <i className="fa fa-power-off mr-1 ml-1" /> Logout
+                                <DropdownItem>
+                                    <i className="fa fa-power-off mr-1 ml-1" /> Profile
                   </DropdownItem>
                                 <DropdownItem divider />
                                 <Button
-                                    color="success"
+                                    color="primary"
                                     className="btn-rounded ml-3 mb-2 mt-2"
+                                    onClick={onLogout}
                                 >
-                                    View Profile
-                  </Button>
+                                    Logout
+                                </Button>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         {/*--------------------------------------------------------------------------------*/}

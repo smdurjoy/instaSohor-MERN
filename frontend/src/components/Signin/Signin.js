@@ -15,6 +15,7 @@ import Axios from 'axios'
 import url from '../../BackendUrl'
 import { useHistory, Redirect } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
+import ErrorNotice from '../../ErrorNotice'
 
 function Copyright() {
   return (
@@ -53,22 +54,42 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const [ username, setUsername ] = useState()
   const [ password, setPassword ] = useState()
+  const [ error, setError ] = useState()
+  const [ buttonText, setButtonText ] = useState('Sign in')
+  const [ isDisabled, setIsDisabled ] = useState(false)
+
+  const [visible, setVisible] = useState(true)
+  const onDismiss = () => {
+    setVisible(false)
+    setError(undefined)
+  }
 
   const { setUserData } = useContext(UserContext)
   const history = useHistory()
 
   const onSignin = async (e) => {
     e.preventDefault()
-    const newUser = { username, password }
-    
-    const loginRes = await Axios.post(`${url}/login`, newUser)
+    setButtonText('Signing in ...')
+    setIsDisabled(true)
+    try {
+      const newUser = { username, password }
+      
+      const loginRes = await Axios.post(`${url}/login`, newUser)
 
-    setUserData({
-      token: loginRes.data.token,
-      user: loginRes.data.user
-    })
-    localStorage.setItem('x-auth-token', loginRes.data.token)
-    history.push('/')
+      setUserData({
+        token: loginRes.data.token,
+        user: loginRes.data.user
+      })
+      localStorage.setItem('x-auth-token', loginRes.data.token)
+      setButtonText('Sign in')
+      setIsDisabled(false)
+      history.push('/')
+    } catch(err) {
+      err.response.data.msg && setError(err.response.data.msg)
+      setVisible(true)
+      setButtonText('Sign in')
+      setIsDisabled(false)
+    }
   }
 
   const classes = useStyles();
@@ -91,6 +112,9 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+        { error && (
+          <ErrorNotice message={error} visible={visible} onDismiss={onDismiss}/> 
+        )}
         <form className={classes.form} onSubmit={onSignin}>
           <TextField
             variant="outlined"
@@ -124,8 +148,9 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={isDisabled}
           >
-            Sign In
+            {buttonText}
           </Button>
           <Grid container>
             <Grid item xs>

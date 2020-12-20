@@ -2,11 +2,13 @@ const router = require('express').Router()
 const User = require('../models/userModel')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const validator = require("email-validator");
 const auth = require('../middlewares/auth')
 
 router.post('/register', async (req, res) => {
     try {
         const { name, username, email, password, passwordCheck } = req.body
+        const nameRegex = /^[a-zA-Z ]+$/
 
         // validations
         if(!name || !username || !email || !password || !passwordCheck)
@@ -14,15 +16,21 @@ router.post('/register', async (req, res) => {
                 .status(400)
                 .json({ msg: 'Not all fields have been entered !' })
         
-        if(password.length < 5)
-        return res
-            .status(400)
-            .json({ msg: 'Password must be at least 5 characters long .' })
-
-        if(password !== passwordCheck)
+        if(!(nameRegex.test(name)))
             return res
                 .status(400)
-                .json({ msg: 'Enter the same password twice .' })
+                .json({ msg: 'Please enter a valid display name' })
+
+        if(name.length < 3)
+            return res
+                .status(400)
+                .json({ msg: "Display name can't be less than 3 character !" })
+
+        const existingUserWithUsername = await User.findOne({username: username})
+        if(existingUserWithUsername)
+            return res
+                .status(400)
+                .json({ msg: 'Username already taken !' })
 
         const existingUserWithEmail = await User.findOne({email: email})
         if(existingUserWithEmail)
@@ -30,11 +38,21 @@ router.post('/register', async (req, res) => {
                 .status(400)
                 .json({ msg: 'An account with this email already exists !' })
 
-        const existingUserWithUsername = await User.findOne({username: username})
-        if(existingUserWithUsername)
+        const validEmail = validator.validate(email)
+        if(!validEmail)
             return res
                 .status(400)
-                .json({ msg: 'Username already taken !' })
+                .json({ msg: 'Please enter a valid email address !' })
+
+        if(password.length < 5)
+        return res
+            .status(400)
+            .json({ msg: 'Password must be at least 5 characters long.' })
+
+        if(password !== passwordCheck)
+            return res
+                .status(400)
+                .json({ msg: 'Enter the same password twice.' })
 
         const salt = await bcrypt.genSalt()
         const hashPassword = await bcrypt.hash(password, salt)
@@ -68,13 +86,13 @@ router.post('/login', async (req, res) => {
         if(!user) 
             return res
                 .status(400)
-                .json({ msg: 'No account with this username have been found !' })
+                .json({ msg: 'No account with this username has been registered !' })
 
         const isMatch = await bcrypt.compare(password, user.password)
         if(!isMatch)
             return res
                 .status(400)
-                .json({ msg: 'Invalid Credentials !' })
+                .json({ msg: "Sorry, that didn't work ! Try again." })
         
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
         res.json({

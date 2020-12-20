@@ -12802,7 +12802,7 @@ Preloader
 
 #main-wrapper[data-layout='vertical'] .left-sidebar[data-sidebarbg='skin6'] .sidebar-nav .has-arrow::after,
 #main-wrapper[data-layout='horizontal'] .left-sidebar[data-sidebarbg='skin6'] .sidebar-nav .has-arrow::after {
-    border-color: #212529;
+    border-color: #850291;
 }
 
 #main-wrapper[data-layout='vertical'] .left-sidebar[data-sidebarbg='skin6'] .sidebar-nav .user-content,
@@ -12811,7 +12811,7 @@ Preloader
 #main-wrapper[data-layout='horizontal'] .left-sidebar[data-sidebarbg='skin6'] .sidebar-nav .user-content,
 #main-wrapper[data-layout='horizontal'] .left-sidebar[data-sidebarbg='skin6'] .sidebar-nav .user-name,
 #main-wrapper[data-layout='horizontal'] .left-sidebar[data-sidebarbg='skin6'] .sidebar-nav .user-email {
-    color: #212529;
+    color: #212129;
 }
 
 #main-wrapper[data-layout='vertical'] .left-sidebar[data-sidebarbg='skin6'] .create-btn,
@@ -13353,7 +13353,7 @@ sidebar navigation
     white-space: nowrap;
     align-items: center;
     line-height: 25px;
-    opacity: 0.6;
+    opacity: 1;
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;

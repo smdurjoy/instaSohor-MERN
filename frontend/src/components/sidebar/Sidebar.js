@@ -1,15 +1,28 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Nav } from 'reactstrap';
+import React, { useContext } from 'react';
+import { NavLink, useHistory } from 'react-router-dom';
+import { Nav, Button } from 'reactstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined';
 import BlurLinearOutlinedIcon from '@material-ui/icons/BlurLinearOutlined';
+import UserContext from '../../context/UserContext'
 
 const Sidebar = (props) => {
     const expandLogo = () => {
         document.getElementById("logobg").classList.toggle("expand-logo");
+    }
+
+    const history = useHistory()
+    const { setUserData } = useContext(UserContext)
+
+    const onLogout = () => {
+        setUserData({
+            token: undefined,
+            user: undefined
+        })
+        localStorage.setItem('x-auth-token', '')
+        history.push('/signin')
     }
 
     return (
@@ -36,6 +49,13 @@ const Sidebar = (props) => {
                             </NavLink>
                         </li>
                     </Nav>
+                    <Button
+                        color="primary"
+                        className="btn-rounded ml-3 mt-3 d-md-none d-lg-none d-xl-none"
+                        onClick={onLogout}
+                    >
+                        Logout
+                    </Button>  
                 </PerfectScrollbar>
             </div>
         </aside>
