@@ -16,9 +16,9 @@ import brandLogo from '../../assets/images/brang-logo.png';
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
 import DehazeIcon from '@material-ui/icons/Dehaze';
+import { fade, makeStyles } from '@material-ui/core/styles';
 
 const Header = () => {
-
     /*--------------------------------------------------------------------------------*/
     /*To open SIDEBAR-MENU in MOBILE VIEW                                             */
     /*--------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ const Header = () => {
         localStorage.setItem('x-auth-token', '')
         history.push('/signin')
     }
-
+    
     return (
         <header className="topbar navbarbg" data-navbarbg="skin1">
             <Navbar className="top-navbar" dark expand="md">
@@ -65,6 +65,7 @@ const Header = () => {
                         <DehazeIcon/>
                     </button>
                 </div>
+            
                 <Collapse className="navbarbg" navbar data-navbarbg="skin1" >
                     <Nav className="ml-auto float-right" navbar>
                         {/*--------------------------------------------------------------------------------*/}

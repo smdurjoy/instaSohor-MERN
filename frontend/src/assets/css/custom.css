@@ -4,3 +4,42 @@
     font-family: 'Lobster', cursive;
     font-size: 24px;
 }
+
+.sendMsgBox {
+    width: 100%;
+    display: flex;
+}
+
+.msgInput {
+    flex: 1;
+    font-size: 16px;
+}
+
+.sendIcon {
+    flex: 0;
+}
+
+.commentSection {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+    .postCard {
+        display: flex;
+        flex-direction: column; 
+        justify-content: center; 
+        width: 70%;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .postCard {
+        display: flex;
+        flex-direction: column; 
+        justify-content: center; 
+        width: 100%;
+        margin-top: 20px;
+    }
+}

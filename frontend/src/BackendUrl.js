@@ -1,3 +1,3 @@
-const url = 'http://localhost:5000/users'
+const url = 'http://localhost:5000'
 
 export default url

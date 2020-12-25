@@ -27,6 +27,7 @@ router.post('/new', auth, async (req, res) => {
     }
 })
 
+// get user profile posts
 router.get('/', auth, async (req, res) => {
     const posts = await Post.find({ postedBy: req.user })
     return res.json(posts)

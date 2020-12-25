@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link } from 'react-router-dom';
 import brandLogo from '../../assets/images/brang-logo.png';
-import Axios from 'axios'
+import axios from 'axios'
 import url from '../../BackendUrl'
 import { useHistory, Redirect } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
@@ -74,9 +74,9 @@ export default function SignUp() {
 
     try {
       const newUser = { name, username, email, password, passwordCheck }
-      await Axios.post(`${url}/register`, newUser)
+      await axios.post(`${url}/users/register`, newUser)
       
-      const loginRes = await Axios.post(`${url}/login`, {
+      const loginRes = await axios.post(`${url}/users/login`, {
         username,
         password
       })
@@ -108,6 +108,7 @@ export default function SignUp() {
 
   return (
     <Container component="main" maxWidth="xs">
+      <title>Join instaSohor</title>
       <CssBaseline />
       <div className={classes.paper}>
         <div className="mb-1">

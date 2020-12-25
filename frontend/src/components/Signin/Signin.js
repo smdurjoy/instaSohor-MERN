@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link } from 'react-router-dom';
 import brandLogo from '../../assets/images/brang-logo.png';
-import Axios from 'axios'
+import axios from 'axios'
 import url from '../../BackendUrl'
 import { useHistory, Redirect } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
@@ -74,13 +74,14 @@ export default function SignIn() {
     try {
       const newUser = { username, password }
       
-      const loginRes = await Axios.post(`${url}/login`, newUser)
+      const loginRes = await axios.post(`${url}/users/login`, newUser)
 
       setUserData({
         token: loginRes.data.token,
         user: loginRes.data.user
       })
       localStorage.setItem('x-auth-token', loginRes.data.token)
+      localStorage.setItem('user', loginRes.data.user.id)
       setButtonText('Sign in')
       setIsDisabled(false)
       history.push('/')
@@ -104,6 +105,7 @@ export default function SignIn() {
 
   return (
     <Container component="main" maxWidth="xs">
+      <title>Sign in</title>
       <CssBaseline />
       <div className={classes.paper}>
         <div className="mb-1">

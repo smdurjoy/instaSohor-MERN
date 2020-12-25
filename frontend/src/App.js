@@ -22,12 +22,12 @@ function App() {
                 token = ''
             }
 
-            const tokenRes = await Axios.post(`${url}/isTokenValid`, null, {
+            const tokenRes = await Axios.post(`${url}/users/isTokenValid`, null, {
                 headers: { 'x-auth-token': token }
             })
 
             if(tokenRes.data) {
-                const userRes = await Axios.get(`${url}/`, {
+                const userRes = await Axios.get(`${url}/users/`, {
                     headers: { 'x-auth-token': token }
                 })
                 

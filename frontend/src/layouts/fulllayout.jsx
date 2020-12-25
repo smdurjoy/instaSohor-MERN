@@ -45,6 +45,7 @@ const Fulllayout = (props) => {
             data-header-position="fixed"
             data-boxed-layout="full"
         >
+            <title>{props.title}</title>
             {/* Header ---------------------------------------------------------- */}
             <Header />
 

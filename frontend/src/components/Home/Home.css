@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.home {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    font-family: 'Poppins', sans-serif;
+    background-color: #FAFAFB;
+}
+
+.home__feed {
+    flex-basis: 62%;
+    height: auto;
+}
+
+.home__feed__posts {
+    padding: 20px;
+}
+
+.content__title {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.content__time {
+    color: #50B4FC;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.title{
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.home__feed__createPost__image {
+    flex: 0;
+    margin-top: 1rem;
+}
+
+.home__image{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+}
+
+.home__feed__createPost__input {
+    flex: 1;
+    margin-top: 1rem;
+}
+
+.home__feed__createPost__input input{
+    border: none;
+    margin-left: 1rem;
+}
+
+.home__button__background {
+    font-size: 14px !important;
+    background-color: #F5FBFF !important;   
+    color: #50B4FC !important;
+    border-radius: 5px !important;  
+    padding: 8px !important;
+    font-weight: 300 !important;
+}   
+
+.home__sidebar {
+    flex-basis: 35%;
+    height: auto;
+}
+
+.box-style {
+    background-color: #ffffff;
+    padding: .5rem;
+    border-radius: 5px;
+    box-shadow: -2px 0px 15px -5px #dddddd;
+    -webkit-box-shadow: -2px 0px 15px -5px #dddddd;
+    -moz-box-shadow: -2px 0px 15px -5px #dddddd;
+}
+
+.home__feed__posts__text {
+    color: #777D74;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.home__feed__posts__action {
+    margin-top: -2rem;
+}
+
+.home__feed__posts__images {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.home__feed__posts__image{
+    width: 48%;
+    height: 200px;
+}
+
+.home__like__btn__icon {
+    font-size: 16px !important;
+}
