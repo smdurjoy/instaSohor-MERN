@@ -16,7 +16,6 @@ import brandLogo from '../../assets/images/brang-logo.png';
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
 import DehazeIcon from '@material-ui/icons/Dehaze';
-import { fade, makeStyles } from '@material-ui/core/styles';
 
 const Header = () => {
     /*--------------------------------------------------------------------------------*/

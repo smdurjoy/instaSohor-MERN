@@ -25,6 +25,8 @@ File: scss
 /*Topbar Colors*/
 @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800");
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 .topbar {
     box-shadow: 1px 0px 7px rgba(0, 0, 0, 0.05);
     -webkit-box-shadow: 1px 0px 7px rgba(0, 0, 0, 0.05);
@@ -98,7 +100,7 @@ File: scss
     --breakpoint-lg: 992px;
     --breakpoint-xl: 1200px;
     --breakpoint-xlg: 1600px;
-    --font-family-sans-serif: "Nunito Sans", sans-serif;
+    --font-family-sans-serif: 'Poppins', sans-serif;
     --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
@@ -109,7 +111,7 @@ File: scss
 }
 
 html {
-    font-family: sans-serif;
+    font-family: 'Poppins', sans-serif;
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -136,7 +138,7 @@ section {
 
 body {
     margin: 0;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.5;

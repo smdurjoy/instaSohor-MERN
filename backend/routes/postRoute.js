@@ -33,6 +33,16 @@ router.get('/', auth, async (req, res) => {
     return res.json(posts)
 })
 
+// get all user posts
+router.get('/all', auth, async (req, res) => {
+    try {
+        const posts = await Post.find().populate('postedBy', '_id name').populate('comments.commentedBy', '_id name')
+        return res.status(200).json(posts)
+    } catch(err) {
+        res.status(500).json({ error: err.message })
+    }
+})
+
 router.delete('/:id', auth, async (req, res) => {
     try {
         const post = await Post.findOne({postedBy: req.user, _id: req.params.id})
@@ -74,6 +84,47 @@ router.put('/:id', auth, async (req, res) => {
         })
 
         return res.status(200).json({ msg: "Post Updated Successfully" })
+
+    } catch(err) {
+        return res.status(500).json({ error: err.message })
+    }
+})
+
+router.put('/like/:id', auth, async (req, res) => {
+    try {
+        const like = await Post.findByIdAndUpdate(req.params.id, {
+            $push:{likes: req.user}
+        },{ new: true }).populate('postedBy', '_id name').populate('comments.commentedBy', '_id name').exec()
+        return res.status(200).json(like)
+
+    } catch(err) {
+        return res.status(500).json({ error: err.message })
+    }
+})
+
+router.put('/unlike/:id', auth, async (req, res) => {
+    try {
+        const like = await Post.findByIdAndUpdate(req.params.id, {
+            $pull:{likes: req.user}
+        },{ new: true }).populate('postedBy', '_id name').populate('comments.commentedBy', '_id name').exec()
+        return res.status(200).json(like)
+
+    } catch(err) {
+        return res.status(500).json({ error: err.message })
+    }
+})
+
+router.put('/comment/:id', auth, async (req, res) => {
+    try {
+        const commentData = {
+            text: req.body.text,
+            commentedBy: req.user
+        }
+        const comment = await Post.findByIdAndUpdate(req.params.id, {
+            $push:{comments: commentData}
+        }, {new: true}).populate('postedBy', '_id name').populate('comments', '_id text').populate('comments.commentedBy', '_id name').exec()
+
+        return res.status(200).json(comment)
 
     } catch(err) {
         return res.status(500).json({ error: err.message })

@@ -44,6 +44,12 @@
     border-radius: 50%;
 }
 
+.home__comment__image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
 .home__feed__createPost__input {
     flex: 1;
     margin-top: 1rem;
@@ -96,8 +102,38 @@
 .home__feed__posts__image{
     width: 48%;
     height: 200px;
+    border-radius: 5px;
 }
 
 .home__like__btn__icon {
     font-size: 16px !important;
+}
+
+.home__post__comment__form {
+    width: 100%;
+    display: flex;
+    border: 1px solid #f3f1f1;
+  }
+  
+.home__post__comment__input {
+    flex: 1;
+    margin-left: 10px;
+    border: none;
+}
+
+.home__post__comment__button {
+    flex: 0;
+}
+
+.home__feed__createPost__button {
+    background-color: #50b5ff !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    border-radius: 5px !important;  
+    padding: 5px 8px !important;
+    font-weight: 300 !important;
+}
+
+.home__feed__createPost__button:hover {
+    background-color: #2AA3FB !important;
 }
