@@ -14,6 +14,7 @@ import url from '../../BackendUrl'
 import { useHistory, Redirect } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
 import ErrorNotice from '../../ErrorNotice'
+import './Signup.css'
 
 function Copyright() {
   return (
@@ -55,7 +56,7 @@ export default function SignUp() {
   const [ password, setPassword ] = useState()
   const [ passwordCheck, setPasswordCheck ] = useState()
   const [ error, setError ] = useState()
-  const [ buttonText, setButtonText ] = useState('Sign in')
+  const [ buttonText, setButtonText ] = useState('Sign up')
   const [ isDisabled, setIsDisabled ] = useState(false)
 
   const { setUserData } = useContext(UserContext)
@@ -190,8 +191,8 @@ export default function SignUp() {
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
             disabled={isDisabled}
+            className="signup__button mb-2 mt-3"
           >
             {buttonText}
           </Button>

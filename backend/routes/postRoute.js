@@ -1,26 +1,51 @@
 const router = require('express').Router()
 const auth = require('../middlewares/auth')
 const Post = require('../models/postModel')
+const formidable = require('formidable')
 
 router.post('/new', auth, async (req, res) => {
     try {
-        const { text, image } = req.body
+        const form = new formidable.IncomingForm()
+        form.uploadDir = 'uploads/post-images'
+        form.keepExtensions = true
+        form.multiples = true
 
-        // validation
-        if(!text) 
+        form.parse(req, async (err, fields, files) => {
+            if(err) {
+                console.log(err.message)
+            }
+            const images = files.images
+            
+            let path = ''
+
+            if(images.length > 0) {
+                images.forEach((file) => {
+                    path = path + file.path + ','
+                })
+    
+                path = path.substring(0, path.lastIndexOf(','))
+
+            } else {
+                path = images.path
+            }
+
+            if(!fields.text)
             return res
                 .status(400)
                 .json({ msg: 'Not all fields have been entered !' })
-        
-        const newPost = new Post({
-            text,
-            image,
-            postedBy: req.user
+
+            const newPost = new Post({
+                text: fields.text,
+                images: path,
+                comments : [],
+                postedBy: req.user
+            })
+
+            const savedPost = await (await newPost.save()).populate('postedBy', '_id name').execPopulate()
+
+            return res.status(200).json(savedPost)
+
         })
-
-        const savedPost = await newPost.save()
-
-        return res.json(savedPost)
 
     } catch(err) {
         res.status(500).json({ error: err.message })
@@ -130,5 +155,19 @@ router.put('/comment/:id', auth, async (req, res) => {
         return res.status(500).json({ error: err.message })
     }
 })
+
+router.put('/uncomment/:id', auth, async (req, res) => {
+    try {
+        const comment = await Post.findByIdAndUpdate(req.params.id, {
+            $pull:{comments: { _id: req.body.commentId }}
+        }, {new: true}).populate('postedBy', '_id name').populate('comments', '_id text').populate('comments.commentedBy', '_id name').exec()
+
+        return res.status(200).json(comment)
+
+    } catch(err) {
+        return res.status(500).json({ error: err.message })
+    }
+})
+
 
 module.exports = router

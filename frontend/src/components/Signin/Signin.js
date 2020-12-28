@@ -16,6 +16,7 @@ import url from '../../BackendUrl'
 import { useHistory, Redirect } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
 import ErrorNotice from '../../ErrorNotice'
+import './Signin.css'
 
 function Copyright() {
   return (
@@ -148,9 +149,8 @@ export default function SignIn() {
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
-            className={classes.submit}
             disabled={isDisabled}
+            className="signin__button mt-2 mb-2"
           >
             {buttonText}
           </Button>

@@ -10,8 +10,8 @@ import url from './BackendUrl'
 
 function App() {
     const [ userData, setUserData ] = useState({
-        token: undefined,
-        user: undefined
+        token: '',
+        user: {name: 'loading..'}
     })
 
     useEffect(() => {

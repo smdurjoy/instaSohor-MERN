@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import {
-    Nav,
     Navbar,
     NavbarBrand,
     Collapse,
@@ -11,11 +10,16 @@ import {
     DropdownMenu
 } from 'reactstrap';
 
-import profilephoto from '../../assets/images/users/profile-user.png';
 import brandLogo from '../../assets/images/brang-logo.png';
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
 import DehazeIcon from '@material-ui/icons/Dehaze';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import './Header.css'
+import IconButton from '@material-ui/core/IconButton';
+import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
+import DraftsOutlinedIcon from '@material-ui/icons/DraftsOutlined';
+import RecordVoiceOverOutlinedIcon from '@material-ui/icons/RecordVoiceOverOutlined';
 
 const Header = () => {
     /*--------------------------------------------------------------------------------*/
@@ -26,7 +30,7 @@ const Header = () => {
     }
 
     const history = useHistory()
-    const { setUserData } = useContext(UserContext)
+    const { userData, setUserData } = useContext(UserContext)
 
     const onLogout = () => {
         setUserData({
@@ -34,9 +38,10 @@ const Header = () => {
             user: undefined
         })
         localStorage.setItem('x-auth-token', '')
+        localStorage.setItem('user', '')
         history.push('/signin')
     }
-    
+
     return (
         <header className="topbar navbarbg" data-navbarbg="skin1">
             <Navbar className="top-navbar" dark expand="md">
@@ -66,42 +71,46 @@ const Header = () => {
                 </div>
             
                 <Collapse className="navbarbg" navbar data-navbarbg="skin1" >
-                    <Nav className="ml-auto float-right" navbar>
-                        {/*--------------------------------------------------------------------------------*/}
-                        {/* Start Profile Dropdown                                                         */}
-                        {/*--------------------------------------------------------------------------------*/}
-                        <UncontrolledDropdown nav inNavbar>
+                    <div className="header__search ml-auto">
+                        <input type="text" className="header__search__input" placeholder="Type here to search"/>
+                    </div>
+                    <div className="header__icons ml-auto d-flex align-items-center">
+                        <div className="d-flex align-items-center header__profile__link" onClick={() => history.push('/profile')}>
+                            <img src="https://source.unsplash.com/random" alt="Profile"/>
+                            <h4>{ userData.user.name.split(" ")[0] }</h4>
+                        </div>
+                        <IconButton className="header__icon ml-2">
+                            <NotificationsNoneIcon className="icon"/>
+                        </IconButton>
+                        <IconButton className="header__icon">
+                            <DraftsOutlinedIcon className="icon"/>
+                        </IconButton>
+                        <IconButton className="header__icon">
+                            <RecordVoiceOverOutlinedIcon className="icon"/>
+                        </IconButton>
+                        <UncontrolledDropdown>
                             <DropdownToggle nav caret className="pro-pic">
-                                <img
-                                    src={profilephoto}
-                                    alt="user"
-                                    className="rounded-circle"
-                                    width="31"
-                                />
+                                <ExpandMoreIcon/>
                             </DropdownToggle>
                             <DropdownMenu right className="user-dd">
                                 <DropdownItem divider />
                                 <DropdownItem>
                                     <i className="ti-settings mr-1 ml-1" /> Settings
-                  </DropdownItem>
+                                </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem>
                                     <i className="fa fa-power-off mr-1 ml-1" /> Profile
-                  </DropdownItem>
+                                </DropdownItem>
                                 <DropdownItem divider />
                                 <Button
-                                    color="primary"
-                                    className="btn-rounded ml-3 mb-2 mt-2"
+                                    className="ml-3 mb-2 mt-2 header__logout__btn"
                                     onClick={onLogout}
                                 >
                                     Logout
                                 </Button>
                             </DropdownMenu>
                         </UncontrolledDropdown>
-                        {/*--------------------------------------------------------------------------------*/}
-                        {/* End Profile Dropdown                                                           */}
-                        {/*--------------------------------------------------------------------------------*/}
-                    </Nav>
+                    </div>
                 </Collapse>
             </Navbar>
         </header>
