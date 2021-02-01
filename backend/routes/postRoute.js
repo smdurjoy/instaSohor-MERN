@@ -90,7 +90,6 @@ router.put('/:id', auth, async (req, res) => {
         let { text, image } = req.body
 
         const post = await Post.findOne({postedBy: req.user, _id: req.params.id})
-        console.log(post)
 
         if(!post)
             return res
@@ -108,7 +107,7 @@ router.put('/:id', auth, async (req, res) => {
             image
         })
 
-        return res.status(200).json({ msg: "Post Updated Successfully" })
+        return res.status(200).json("Post updated successfully.")
 
     } catch(err) {
         return res.status(500).json({ error: err.message })
@@ -169,5 +168,23 @@ router.put('/uncomment/:id', auth, async (req, res) => {
     }
 })
 
+router.post('/comment/:id', auth, async (req, res) => {
+    try {
+        await Post.findById(req.params.id, function(err, post) {
+            if (!post)
+                res.status(404).send("data is not found");
+            else {
+                post.comments.findByIdAndDelete
+                post.comments.text = req.body.text;
+                post.save().then(comment => {
+                    return res.status(200).json(comment)
+                })
+            }
+        });
+
+    } catch(err) {
+        return res.status(500).json({ error: err.message })
+    }
+})
 
 module.exports = router

@@ -154,3 +154,13 @@
     margin-left: 20px;
     margin-top: 1rem;
 }
+
+.home__post__action__dropdown {
+    margin-right: -1rem !important;
+    margin-top: 6px;
+}
+
+.edit__comment__box {
+    border: 1px solid #f3f1f1;
+    padding: 10px;
+}

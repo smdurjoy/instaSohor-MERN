@@ -24,6 +24,13 @@
     overflow-y: auto;
 }
 
+.loadingSpinner {
+    height: 15px !important;
+    width: 15px !important;
+    color: #ffffff !important;
+    margin-right: 6px;
+}
+
 @media (min-width: 768px) {
     .postCard {
         display: flex;
@@ -43,3 +50,4 @@
         margin-top: 20px;
     }
 }
+
