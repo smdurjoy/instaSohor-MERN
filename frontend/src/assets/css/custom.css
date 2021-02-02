@@ -31,6 +31,15 @@
     margin-right: 6px;
 }
 
+.box-style {
+    background-color: #ffffff;
+    padding: .5rem;
+    border-radius: 5px;
+    box-shadow: -2px 0px 15px -5px #dddddd;
+    -webkit-box-shadow: -2px 0px 15px -5px #dddddd;
+    -moz-box-shadow: -2px 0px 15px -5px #dddddd;
+}
+
 @media (min-width: 768px) {
     .postCard {
         display: flex;

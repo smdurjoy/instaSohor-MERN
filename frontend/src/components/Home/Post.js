@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import ThumbUpAltOutlinedIcon from '@material-ui/icons/ThumbUpAltOutlined';
 import ThumbDownAltOutlinedIcon from '@material-ui/icons/ThumbDownAltOutlined';
 import SendIcon from '@material-ui/icons/Send';
@@ -7,16 +6,13 @@ import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Divider } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import ImageIcon from '@material-ui/icons/Image';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+    
 function Post(props) {
     const [open, setOpen] = useState(false);
     const [commentText, setCommentText] = useState(false);

@@ -54,8 +54,12 @@ router.post('/new', auth, async (req, res) => {
 
 // get user profile posts
 router.get('/', auth, async (req, res) => {
-    const posts = await Post.find({ postedBy: req.user })
-    return res.json(posts)
+    try {
+        const posts = await Post.find({ postedBy: req.user }).populate('postedBy', '_id name').populate('comments.commentedBy', '_id name')
+        return res.status(200).json(posts)
+    } catch(err) {
+        res.status(500).json({ error: err.message })
+    }
 })
 
 // get all user posts

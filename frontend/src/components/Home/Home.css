@@ -73,16 +73,7 @@
     flex-basis: 35%;
     height: auto;
 }
-
-.box-style {
-    background-color: #ffffff;
-    padding: .5rem;
-    border-radius: 5px;
-    box-shadow: -2px 0px 15px -5px #dddddd;
-    -webkit-box-shadow: -2px 0px 15px -5px #dddddd;
-    -moz-box-shadow: -2px 0px 15px -5px #dddddd;
-}
-
+    
 .home__feed__posts__text {
     color: #777D74;
     font-weight: 300;
