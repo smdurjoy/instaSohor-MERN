@@ -138,3 +138,37 @@
     font-weight: 300;
     font-size: 14px;
 }
+
+.friends {
+    display: flex;
+    width: 680px;
+    justify-content: space-between;
+}
+
+.friends > div {
+    flex-basis: 45%;
+}
+
+.friends_image {
+    height: 130px;
+    width: 130px;
+    margin-right: 15px;
+}
+
+.photos {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.photos > img {
+    flex-basis: 24%;
+    height: 180px;
+    margin-top: 10px;
+}
+
+.friends_action {
+    margin-top: -9px;
+}

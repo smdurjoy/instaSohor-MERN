@@ -8,6 +8,8 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import Timeline from './Timeline';
 import About from './About';
+import Friends from './Friends';
+import Photos from './Photos';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -100,10 +102,10 @@ export default function Content() {
           <About/>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          Item Three
+          <Friends/>
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
-          Item Four
+          <Photos/>
         </TabPanel>
       </SwipeableViews>
     </div>
