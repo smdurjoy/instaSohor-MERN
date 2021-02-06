@@ -349,6 +349,7 @@ const Home = () => {
                                             id={post._id}
                                             postedBy={post.postedBy._id}
                                             name={post.postedBy.name}
+                                            username={post.postedBy.username}
                                             text={post.text}
                                             images={post.images}
                                             likes={post.likes}
@@ -394,7 +395,7 @@ const Home = () => {
                 <Button onClick={handleClose} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={updatePost} disabled={!postText}> 
+                <Button onClick={updatePost} disabled={!postText} type="button">
                     Update
                 </Button>
                 </DialogActions>

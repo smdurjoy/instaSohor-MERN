@@ -40,6 +40,14 @@
     -moz-box-shadow: -2px 0px 15px -5px #dddddd;
 }
 
+.profile_link {
+    color: inherit !important;
+}
+
+.profile_link:hover {
+    text-decoration: underline;
+}
+
 @media (min-width: 768px) {
     .postCard {
         display: flex;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import ThumbUpAltOutlinedIcon from '@material-ui/icons/ThumbUpAltOutlined';
 import ThumbDownAltOutlinedIcon from '@material-ui/icons/ThumbDownAltOutlined';
 import SendIcon from '@material-ui/icons/Send';
@@ -12,12 +12,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Link } from 'react-router-dom';
+import UserContext from '../../context/UserContext'
+import axios from 'axios'
+import url from '../../BackendUrl'
     
 function Post(props) {
     const [open, setOpen] = useState(false);
     const [commentText, setCommentText] = useState(false);
+    const [comment, setComment] = useState('');
     const [postId, setPostId] = useState(false);
     const [commentId, setCommentId] = useState(false);
+    const { userData } = useContext(UserContext);
 
     const editModalOpen = (postId, commentId, text) => {
         setOpen(true);
@@ -30,6 +36,30 @@ function Post(props) {
         setOpen(false);
     }
 
+    const makeComment = async (text, postId, form) => {
+        try {
+            await axios.put(`${url}/posts/comment/${postId}`, { text }, {
+                headers: {
+                    'x-auth-token' : localStorage.getItem('x-auth-token')
+                }
+            }).then(result => {
+                const newPosts = props.posts.map(data => {
+                    if(data._id === result.data._id) {
+                        return result.data
+                    } else {
+                        return data
+                    }             
+                })
+                props.setPosts(newPosts)
+                setComment('')
+                form.reset()
+            })
+
+        } catch(err) {
+            alert(err.message)
+        }
+    }
+
     return (
         <div className="row box-style mt-3" key={props.id}>
             <div className="col-md-12 d-flex align-items-center mt-2">
@@ -38,7 +68,11 @@ function Post(props) {
                 </div>
                 <div className="ml-3">
                     <div>
-                        <h4 className="content__title">{props.name}</h4>
+                        {userData.user.name === props.name ? (
+                            <Link className="profile_link" to="/profile"><h4 className="content__title">{props.name}</h4></Link>
+                        ) : (
+                            <Link className="profile_link" to={"/profile/"+props.username}><h4 className="content__title">{props.name}</h4></Link>
+                        )}
                     </div>
                     
                     <div>
@@ -122,7 +156,12 @@ function Post(props) {
                         <div className="col-md-12 d-flex mt-4" key={comment._id}>
                             <img className="home__comment__image" src="https://source.unsplash.com/random" alt={comment.commentedBy.name}/>
                             <div className="ml-3">
-                                <h4 className="content__title">{comment.commentedBy.name}</h4>
+                            {userData.user.name === comment.commentedBy.name ? (
+                                <Link className="profile_link" to="/profile"><h4 className="content__title">{comment.commentedBy.name}</h4></Link>
+                            ) : (
+                                <Link className="profile_link" to={"profile/"+comment.commentedBy.username}><h4 className="content__title">{comment.commentedBy.name}</h4></Link>
+                            )}
+                            
                                 <h4 id="post__comment" className="home__feed__posts__text">{comment.text}</h4>
                                 <div className="d-flex">
                                     <IconButton className="home__button__background">   
@@ -158,13 +197,13 @@ function Post(props) {
             <div className="col-md-12 mt-4 mb-2">
                 <form className="home__post__comment__form" onSubmit={(e) => {
                     e.preventDefault()
-                    props.makeComment(props.comment, props.id, e.target)    
+                    makeComment(comment, props.id, e.target)
                 }}>
-                    <input type="text" className="home__post__comment__input" placeholder="Add a comment" onChange={(e) => props.setComment(e.target.value)}/>
+                    <input type="text" className="home__post__comment__input" placeholder="Add a comment" onChange={(e) => setComment(e.target.value)}/>
                     <IconButton >
                         <InsertEmoticonIcon />
                     </IconButton>
-                    <IconButton disabled={!props.comment} type="submit" variant="contained" color="primary" className="home__post__comment__button">
+                    <IconButton disabled={!comment} type="submit" variant="contained" color="primary" className="home__post__comment__button">
                         <SendIcon/>
                     </IconButton>
                 </form>

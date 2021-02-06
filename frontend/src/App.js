@@ -7,6 +7,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import UserContext from './context/UserContext'
 import Axios from 'axios'
 import url from './BackendUrl'
+import UserProfile from './components/Profile/UserProfile'
+import { PostProvider } from './context/PostContext'
 
 function App() {
     const [ userData, setUserData ] = useState({
@@ -44,12 +46,15 @@ function App() {
     return (
         <BrowserRouter>
             <UserContext.Provider value={{ userData, setUserData }}>
-                <Switch>
-                    <Route exact path="/" component={Home}/>
-                    <Route path="/profile" component={Profile}/>
-                    <Route path="/signin" component={CheckSignin}/>
-                    <Route path="/signup" component={Signup}/>
-                </Switch>
+                <PostProvider>
+                    <Switch>
+                        <Route exact path="/" component={Home}/>
+                        <Route exact path="/profile" component={Profile}/>
+                        <Route path="/profile/:username" component={UserProfile}/>  
+                        <Route path="/signin" component={CheckSignin}/>
+                        <Route path="/signup" component={Signup}/>
+                    </Switch>
+                </PostProvider>
             </UserContext.Provider>
         </BrowserRouter>
     )

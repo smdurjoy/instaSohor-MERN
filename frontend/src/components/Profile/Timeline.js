@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { Divider } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import ImageIcon from '@material-ui/icons/Image';
@@ -14,7 +14,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';  
-
+import { PostContext } from '../../context/PostContext'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,28 +27,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Timeline() {
-    const [ posts, setPosts ] = useState([])
-    const [ comment, setComment ] = useState('')
+export default function Timeline({userprofile, username}) {
     const [ postText, setPostText ] = useState('')
     const [ image, setImage ] = useState([]);
     const [ postBtnText, setPostBtnText ] = useState('Post')
-    const [open, setOpen] = useState(false)
-    const [postId, setPostId] = useState(false)
+    const [ open, setOpen ] = useState(false)
+    const [ postId, setPostId ] = useState(false)
     const classes = useStyles();
-
-    const getPosts = async () => {
-        await axios.get('http://localhost:5000/posts/', {
-            headers: {
-                'x-auth-token' : localStorage.getItem('x-auth-token')
-            }
-        }).then(res => {
-            setPosts(res.data)
-        })
-    }
+    const [ posts, setPosts, getPosts, getUserPosts ] = useContext(PostContext)
 
     useEffect(() => {   
-        getPosts()
+        if(userprofile) {
+            getUserPosts(username)
+        }else {
+            getPosts()
+        }
     }, [])
 
 
@@ -96,30 +89,6 @@ export default function Timeline() {
                 })
                 setPosts(newPosts)
             })
-        } catch(err) {
-            alert(err.message)
-        }
-    }
-
-    const makeComment = async (text, postId, form) => {
-        try {
-            await axios.put(`${url}/posts/comment/${postId}`, { text }, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-                setComment('')
-                form.reset()
-            })
-
         } catch(err) {
             alert(err.message)
         }
@@ -407,13 +376,12 @@ export default function Timeline() {
                                         images={post.images}
                                         likes={post.likes}
                                         comments={post.comments}
+                                        posts={posts}
+                                        setPosts={setPosts}
                                         confirmDeletePost={confirmDeletePost}
                                         confirmDeleteComment={confirmDeleteComment}
                                         likePost={likePost}
                                         unlikePost={unlikePost}
-                                        makeComment={makeComment}
-                                        comment={comment}
-                                        setComment={setComment}
                                         renderMultiplePostImages={renderMultiplePostImages}
                                         updateComment={updateComment}
                                         editPostModal={editPostModal}
@@ -422,10 +390,9 @@ export default function Timeline() {
                             })
                         ) : (
                             <div className="row box-style text-center mt-3 pt-3">
-                                <h4 className="content__title ml-auto mr-auto">Loading ..</h4>
+                                <h4 className="content__title ml-auto mr-auto">No Post Available</h4>
                             </div>
-                        )   
-                        
+                        )
                     }
                 </div>
             </div>

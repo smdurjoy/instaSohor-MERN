@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
-import { Divider } from '@material-ui/core';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -82,8 +81,9 @@ export default function VerticalTabs() {
       </Tabs>
       <TabPanel value={value} index={0}>
         <div>
+            <h4 className="sidebar_title mb-3">Contact Information</h4>
             <table>
-                <h4 className="sidebar_title mb-3">Contact Information</h4>
+              <tbody>
                 <tr>
                     <td><p className="aboutTitle">Email:</p></td>
                     <td><p className="aboutDes">smdurjoy.cse@gmail.com</p></td>
@@ -96,10 +96,12 @@ export default function VerticalTabs() {
                     <td><p className="aboutTitle">Address:</p></td>
                     <td><p className="aboutDes">East Guptapara, Rangpur</p></td>
                 </tr>
+                </tbody>
             </table>
 
+            <h4 className="sidebar_title mb-3">Basic Information</h4>
             <table className="mt-3">
-                <h4 className="sidebar_title mb-3">Basic Information</h4>
+              <tbody>
                 <tr>
                     <td><p className="aboutTitle">Birthday:</p></td>
                     <td><p className="aboutDes">9 July</p></td>
@@ -112,6 +114,7 @@ export default function VerticalTabs() {
                     <td><p className="aboutTitle">Language</p></td>
                     <td><p className="aboutDes">Bangla & English</p></td>
                 </tr>
+              </tbody>
             </table>
         </div>
       </TabPanel>

@@ -2,6 +2,7 @@ const router = require('express').Router()
 const auth = require('../middlewares/auth')
 const Post = require('../models/postModel')
 const formidable = require('formidable')
+const User = require('../models/userModel')
 
 router.post('/new', auth, async (req, res) => {
     try {
@@ -41,7 +42,7 @@ router.post('/new', auth, async (req, res) => {
                 postedBy: req.user
             })
 
-            const savedPost = await (await newPost.save()).populate('postedBy', '_id name').execPopulate()
+            const savedPost = await (await newPost.save()).populate('postedBy', '_id name username').execPopulate()
 
             return res.status(200).json(savedPost)
 
@@ -52,10 +53,10 @@ router.post('/new', auth, async (req, res) => {
     }
 })
 
-// get user profile posts
+// get login user profile posts
 router.get('/', auth, async (req, res) => {
     try {
-        const posts = await Post.find({ postedBy: req.user }).populate('postedBy', '_id name').populate('comments.commentedBy', '_id name')
+        const posts = await Post.find({ postedBy: req.user }).populate('postedBy', '_id name username').populate('comments.commentedBy', '_id name username')
         return res.status(200).json(posts)
     } catch(err) {
         res.status(500).json({ error: err.message })
@@ -65,7 +66,22 @@ router.get('/', auth, async (req, res) => {
 // get all user posts
 router.get('/all', auth, async (req, res) => {
     try {
-        const posts = await Post.find().populate('postedBy', '_id name').populate('comments.commentedBy', '_id name')
+        const posts = await Post.find().populate('postedBy', '_id name username').populate('comments.commentedBy', '_id name username')
+        return res.status(200).json(posts)
+    } catch(err) {
+        res.status(500).json({ error: err.message })
+    }
+})
+
+// get random user profile posts
+router.get('/:username', auth, async (req, res) => {
+    try {
+        const user = await User.findOne({username: req.params.username}).select('_id')
+
+        if(!user)
+            return res.status(400).json({"msg" : "User Not Found !"})
+            
+        const posts = await Post.find({ postedBy: user }).populate('postedBy', '_id name username').populate('comments.commentedBy', '_id name username')
         return res.status(200).json(posts)
     } catch(err) {
         res.status(500).json({ error: err.message })
@@ -122,7 +138,7 @@ router.put('/like/:id', auth, async (req, res) => {
     try {
         const like = await Post.findByIdAndUpdate(req.params.id, {
             $push:{likes: req.user}
-        },{ new: true }).populate('postedBy', '_id name').populate('comments.commentedBy', '_id name').exec()
+        },{ new: true }).populate('postedBy', '_id name username').populate('comments.commentedBy', '_id name username').exec()
         return res.status(200).json(like)
 
     } catch(err) {
@@ -134,7 +150,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
     try {
         const like = await Post.findByIdAndUpdate(req.params.id, {
             $pull:{likes: req.user}
-        },{ new: true }).populate('postedBy', '_id name').populate('comments.commentedBy', '_id name').exec()
+        },{ new: true }).populate('postedBy', '_id name username').populate('comments.commentedBy', '_id name username').exec()
         return res.status(200).json(like)
 
     } catch(err) {
@@ -150,7 +166,7 @@ router.put('/comment/:id', auth, async (req, res) => {
         }
         const comment = await Post.findByIdAndUpdate(req.params.id, {
             $push:{comments: commentData}
-        }, {new: true}).populate('postedBy', '_id name').populate('comments', '_id text').populate('comments.commentedBy', '_id name').exec()
+        }, {new: true}).populate('postedBy', '_id name username').populate('comments', '_id text').populate('comments.commentedBy', '_id name username').exec()
 
         return res.status(200).json(comment)
 
@@ -163,7 +179,7 @@ router.put('/uncomment/:id', auth, async (req, res) => {
     try {
         const comment = await Post.findByIdAndUpdate(req.params.id, {
             $pull:{comments: { _id: req.body.commentId }}
-        }, {new: true}).populate('postedBy', '_id name').populate('comments', '_id text').populate('comments.commentedBy', '_id name').exec()
+        }, {new: true}).populate('postedBy', '_id name username').populate('comments', '_id text').populate('comments.commentedBy', '_id name username').exec()
 
         return res.status(200).json(comment)
 

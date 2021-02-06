@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Content() {
+export default function Content({ userprofile, username }) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -96,7 +96,7 @@ export default function Content() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <Timeline/>
+          <Timeline userprofile={userprofile} username={username}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           <About/>

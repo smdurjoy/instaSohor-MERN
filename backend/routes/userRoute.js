@@ -131,4 +131,15 @@ router.get('/', auth, async (req, res) => {
     return res.json(user)
 })
 
+router.get('/:username', auth, async (req, res) => {
+    const user = await User.findOne({username: req.params.username}).select('_id name username')
+
+    if(!user)
+    return res
+        .status(400)
+        .json({ msg: 'No user found !' })
+
+    return res.json(user)
+})
+
 module.exports = router 

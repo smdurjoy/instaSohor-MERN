@@ -35,7 +35,7 @@ const Sidebar = (props) => {
                                 <HomeOutlinedIcon className="mr-1"/>
                                 <span className="hide-menu"> Home</span> 
                             </NavLink>
-                            <NavLink to="/profile" className="sidebar-link" activeStyle={{ color: '#111111' }} >
+                            <NavLink exact to="/profile" className="sidebar-link" activeStyle={{ color: '#111111' }} >
                                 <AccountCircleOutlinedIcon className="mr-1"/>
                                 <span className="hide-menu">Profile</span>
                             </NavLink>
