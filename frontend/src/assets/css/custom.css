@@ -58,6 +58,11 @@
     padding: 2px 5px !important;
 }   
 
+.followingPostTitle {
+    font-weight: 600;
+    font-size: 18px;
+}
+
 @media (min-width: 768px) {
     .postCard {
         display: flex;

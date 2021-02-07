@@ -35,8 +35,18 @@ export const PostProvider = (props) => {
         })
     }
 
+    const getFollowingPosts = async () => {
+        await axios.get(`${url}/posts/following-posts`, {
+            headers: {
+                'x-auth-token' : localStorage.getItem('x-auth-token')
+            }
+        }).then(res => {
+            setPosts(res.data)
+        })
+    }
+
     return(
-        <PostContext.Provider value={[posts, setPosts, getPosts, getUserPosts, getAllPosts]}>
+        <PostContext.Provider value={[posts, setPosts, getPosts, getUserPosts, getAllPosts, getFollowingPosts]}>
             {props.children}
         </PostContext.Provider>
     )

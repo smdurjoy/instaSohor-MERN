@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import UserContext from '../../context/UserContext'
 import axios from 'axios'
 import url from '../../BackendUrl'
+import Swal from 'sweetalert2'
     
 function Post(props) {
     const [open, setOpen] = useState(false);
@@ -59,7 +60,148 @@ function Post(props) {
             alert(err.message)
         }
     }
+
+    const likePost = async (id) => {
+        try {
+            await axios.put(`${url}/posts/like/${id}`, null, {
+                headers: {
+                    'x-auth-token' : localStorage.getItem('x-auth-token')
+                }
+            }).then(result => {
+                const newPosts = props.posts.map(data => {
+                    if(data._id === result.data._id) {
+                        return result.data
+                    } else {
+                        return data
+                    }             
+                })
+                props.setPosts(newPosts)
+            })
+        } catch(err) {
+            alert(err.message)
+        }
+    }
+
+    const unlikePost = async (id) => {
+        try {
+            await axios.put(`${url}/posts/unlike/${id}`, null, {
+                headers: {
+                    'x-auth-token' : localStorage.getItem('x-auth-token')
+                }
+            }).then(result => {
+                const newPosts = props.posts.map(data => {
+                    if(data._id === result.data._id) {
+                        return result.data
+                    } else {
+                        return data
+                    }             
+                })
+                props.setPosts(newPosts)
+            })
+        } catch(err) {
+            alert(err.message)
+        }
+    }
+
+    const confirmDeletePost = (postId) => {
+        Swal.fire({
+            title: 'Are you sure ?',
+            text: "You won't be able to revert this !",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: `Delete`,
+          }).then((result) => {
+            if(result.isConfirmed) {
+                deletePost(postId)
+            }
+        })
+    }
+
+    const deletePost = async (id) => {
+        try {
+            await axios.delete(`${url}/posts/${id}`, {
+                headers: {
+                    'x-auth-token' : localStorage.getItem('x-auth-token')
+                }
+            }).then(response => {
+                if(response.status === 200) {
+                    props.getPosts()
+                    alert(response.data.msg)
+                }
+            })
+
+        } catch(err) {
+            alert(err.message)
+        }
+    }
     
+    const renderMultiplePostImages = (src) => {
+        const paths = src[0].split(",");
+        return paths.map(path => {
+            return <img className="home__feed__posts__image" src={url + '/' + path} key={path} alt={path}/>
+        })
+    }
+
+    const confirmDeleteComment = (postId, commentId) => {
+        Swal.fire({
+            title: 'Are you sure ?',
+            text: "You won't be able to revert this !",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: `Delete`,
+          }).then((result) => {
+            if(result.isConfirmed) {
+                deleteComment(postId, commentId)
+            }
+        })
+    }
+
+    const deleteComment = async (postId, commentId) => {
+        try {
+            await axios.put(`${url}/posts/uncomment/${postId}`, { commentId }, {
+                headers: {
+                    'x-auth-token' : localStorage.getItem('x-auth-token')
+                }
+            }).then(result => {
+                const newPosts = props.posts.map(data => {
+                    if(data._id === result.data._id) {
+                        return result.data
+                    } else {
+                        return data
+                    }             
+                })
+                props.setPosts(newPosts)
+            })
+
+        } catch(err) {
+            alert(err.message)
+        }
+    }
+
+    const updateComment = async (postId, commentId, setOpen) => {
+        try {
+            await axios.put(`${url}/posts/comment/${postId}`, {commentId}, {
+                headers: {
+                    'x-auth-token' : localStorage.getItem('x-auth-token')
+                }
+            }).then(result => {
+                const newPosts = props.posts.map(data => {
+                    if(data._id === result.data._id) {
+                        return result.data
+                    } else {
+                        return data
+                    }             
+                })
+                props.setPosts(newPosts)
+                setOpen(false)
+            })
+
+        } catch(err) {
+            alert(err.message)
+            setOpen(false)
+        }
+    }
+
     return (
         <div className="row box-style mt-3" key={props.id}>
             <div className="col-md-12 d-flex align-items-center mt-2">
@@ -88,7 +230,7 @@ function Post(props) {
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem onClick={() => props.editPostModal(props.id, props.text)}>Edit</DropdownItem>
-                                    <DropdownItem onClick={() => props.confirmDeletePost(props.id)}>Delete</DropdownItem>
+                                    <DropdownItem onClick={() => confirmDeletePost(props.id)}>Delete</DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledButtonDropdown>
                         ) : (
@@ -107,23 +249,22 @@ function Post(props) {
             <div className="col-md-12 home__feed__posts__images">
                 {
                     props.images.length > 0 ? (
-                        props.renderMultiplePostImages(props.images)
+                        renderMultiplePostImages(props.images)
                     ) : (
                         <img className="home__feed__posts__image" src={props.images} alt={props.images}/>
                     )
                 }
-                
             </div>
 
             <div className="col-md-12 d-flex mt-3 mb-2">
                 <div>
                     {
                         props.likes && props.likes.includes(localStorage.getItem('user')) ? (
-                            <IconButton className="home__button__background ml-3" onClick={() => props.unlikePost(props.id)} title="Dislike Post">
+                            <IconButton className="home__button__background ml-3" onClick={() => unlikePost(props.id)} title="Dislike Post">
                                 <ThumbDownAltOutlinedIcon className="home__like__btn__icon"/>
                             </IconButton>
                         ) : (
-                            <IconButton className="home__button__background ml-3" onClick={() => props.likePost(props.id)} title="Like Post">
+                            <IconButton className="home__button__background ml-3" onClick={() => likePost(props.id)} title="Like Post">
                                 <ThumbUpAltOutlinedIcon className="home__like__btn__icon"/>
                             </IconButton>
                         )
@@ -143,7 +284,13 @@ function Post(props) {
                 </div>
                 <div>
                     <IconButton className="home__button__background ml-2">
-                        <span>20 Comments</span>
+                        {
+                            props.comments ? (
+                                <span>{props.comments.length} Comments</span>
+                            ) : (
+                                <span>0 Comments</span>
+                            )
+                        }
                     </IconButton>
                 </div>
             </div>
@@ -181,7 +328,7 @@ function Post(props) {
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             <DropdownItem onClick={() => editModalOpen(props.id, comment._id, comment.text)}>Edit</DropdownItem>
-                                            <DropdownItem onClick={() => props.confirmDeleteComment(props.id, comment._id, comment.text)}>Delete</DropdownItem>
+                                            <DropdownItem onClick={() => confirmDeleteComment(props.id, comment._id, comment.text)}>Delete</DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledButtonDropdown>
                                 ) : (

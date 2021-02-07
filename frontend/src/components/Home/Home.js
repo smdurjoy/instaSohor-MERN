@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Layout from '../../layouts/fulllayout'
 import { Redirect } from 'react-router-dom'
 import './Home.css';
@@ -9,7 +9,6 @@ import ImageIcon from '@material-ui/icons/Image';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import axios from 'axios'
 import url from '../../BackendUrl'
-import Swal from 'sweetalert2'
 import Post from './Post';
 import Sidebar from './Sidebar';
 import Dialog from '@material-ui/core/Dialog';
@@ -30,16 +29,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = () => {
-    const [ posts, setPosts ] = useState([])
-    const [ comment, setComment ] = useState('')
     const [ postText, setPostText ] = useState('')
     const [ image, setImage ] = useState([]);
     const [ postBtnText, setPostBtnText ] = useState('Post')
-    const [open, setOpen] = useState(false)
-    const [postId, setPostId] = useState(false)
+    const [ open, setOpen ] = useState(false)
+    const [ postId, setPostId ] = useState(false)
+    const [ posts, setPosts ] = useState([])
+
+    useEffect(() => {   
+        window.scrollTo(0, 0)
+        getPosts()
+    }, [])
 
     const getPosts = async () => {
-        await axios.get('http://localhost:5000/posts/all', {
+        await axios.get(`${url}/posts/all`, {
             headers: {
                 'x-auth-token' : localStorage.getItem('x-auth-token')
             }
@@ -48,83 +51,12 @@ const Home = () => {
         })
     }
 
-    useEffect(() => {   
-        window.scrollTo(0, 0)
-        getPosts()
-    }, [])
-
     const token = localStorage.getItem('x-auth-token');
     const classes = useStyles();
     if (!token) {
         return (
             <Redirect to="/signin" />
         )
-    }
-
-    const likePost = async (id) => {
-        try {
-            await axios.put(`${url}/posts/like/${id}`, null, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-            })
-        } catch(err) {
-            alert(err.message)
-        }
-    }
-
-    const unlikePost = async (id) => {
-        try {
-            await axios.put(`${url}/posts/unlike/${id}`, null, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-            })
-        } catch(err) {
-            alert(err.message)
-        }
-    }
-
-    const makeComment = async (text, postId, form) => {
-        try {
-            await axios.put(`${url}/posts/comment/${postId}`, { text }, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-                setComment('')
-                form.reset()
-            })
-
-        } catch(err) {
-            alert(err.message)
-        }
     }
 
     const postImagePreview = (e) => {
@@ -161,105 +93,6 @@ const Home = () => {
         } catch(err) {
             alert(err.message)
             setPostBtnText('Post')
-        }
-    }
-
-    const confirmDeleteComment = (postId, commentId) => {
-        Swal.fire({
-            title: 'Are you sure ?',
-            text: "You won't be able to revert this !",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: `Delete`,
-          }).then((result) => {
-            if(result.isConfirmed) {
-                deleteComment(postId, commentId)
-            }
-        })
-    }
-
-    const confirmDeletePost = (postId) => {
-        Swal.fire({
-            title: 'Are you sure ?',
-            text: "You won't be able to revert this !",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: `Delete`,
-          }).then((result) => {
-            if(result.isConfirmed) {
-                deletePost(postId)
-            }
-        })
-    }
-
-    const deleteComment = async (postId, commentId) => {
-        try {
-            await axios.put(`${url}/posts/uncomment/${postId}`, { commentId }, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-            })
-
-        } catch(err) {
-            alert(err.message)
-        }
-    }
-
-    const renderMultiplePostImages = (src) => {
-        const paths = src[0].split(",");
-        return paths.map(path => {
-            return <img className="home__feed__posts__image" src={url + '/' + path} key={path} alt={path}/>
-        })
-    }
-
-    const deletePost = async (id) => {
-        try {
-            await axios.delete(`${url}/posts/${id}`, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(response => {
-                if(response.status === 200) {
-                    getPosts()
-                    alert(response.data.msg)
-                }
-            })
-
-        } catch(err) {
-            alert(err.message)
-        }
-    }
-
-    const updateComment = async (postId, commentId, setOpen) => {
-        try {
-            await axios.put(`${url}/posts/comment/${postId}`, {commentId}, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-                setOpen(false)
-            })
-
-        } catch(err) {
-            alert(err.message)
-            setOpen(false)
         }
     }
 
@@ -346,7 +179,7 @@ const Home = () => {
                         {
                             posts.length > 0 ? (
                                 posts.map(post => {
-                                    return (
+                                    return (    
                                         <Post
                                             key={post._id}
                                             id={post._id}
@@ -357,16 +190,10 @@ const Home = () => {
                                             images={post.images}
                                             likes={post.likes}
                                             comments={post.comments}
-                                            confirmDeletePost={confirmDeletePost}
-                                            confirmDeleteComment={confirmDeleteComment}
-                                            likePost={likePost}
-                                            unlikePost={unlikePost}
-                                            makeComment={makeComment}
-                                            comment={comment}
-                                            setComment={setComment}
-                                            renderMultiplePostImages={renderMultiplePostImages}
-                                            updateComment={updateComment}
                                             editPostModal={editPostModal}
+                                            posts={posts}
+                                            setPosts={setPosts}
+                                            getPosts={getPosts}
                                         />
                                     )
                                 })

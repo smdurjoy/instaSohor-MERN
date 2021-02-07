@@ -76,6 +76,25 @@ router.get('/all', auth, async (req, res) => {
     }
 })
 
+// get following posts
+router.get('/following-posts', auth, async (req, res) => {
+    try {
+        const followingArray = await User.findById(req.user).select('following')
+
+        if(followingArray.following.length < 1)
+            return res.status(400).json({"msg": "You are not following anyone !"})
+
+        const followingPosts = await Post.find({postedBy: {$in:followingArray.following}}).populate('postedBy', '_id name username').populate('comments.commentedBy', '_id name username')
+
+        // const followingUsers = await User.find({_id: {$in:followingArray.following}}).select('-password -email')
+
+        return res.status(200).json(followingPosts)
+
+    } catch(err) {
+        return res.status(500).json({ error: err.message })
+    }
+})
+
 // get random user profile posts
 router.get('/:username', auth, async (req, res) => {
     try {

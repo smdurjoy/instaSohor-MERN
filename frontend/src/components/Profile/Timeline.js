@@ -6,7 +6,6 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import url from '../../BackendUrl'
-import Swal from 'sweetalert2'
 import Post from '../Home/Post';
 import { Redirect } from 'react-router-dom'
 import Dialog from '@material-ui/core/Dialog';
@@ -34,7 +33,7 @@ export default function Timeline({userprofile, username}) {
     const [ open, setOpen ] = useState(false)
     const [ postId, setPostId ] = useState(false)
     const classes = useStyles();
-    const [ posts, setPosts, getPosts, getUserPosts ] = useContext(PostContext)
+    const [ posts, setPosts, getPosts, getUserPosts] = useContext(PostContext)
 
     useEffect(() => {   
         if(userprofile) {
@@ -50,48 +49,6 @@ export default function Timeline({userprofile, username}) {
         return (
             <Redirect to="/signin" />
         )
-    }
-
-    const likePost = async (id) => {
-        try {
-            await axios.put(`${url}/posts/like/${id}`, null, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-            })
-        } catch(err) {
-            alert(err.message)
-        }
-    }
-
-    const unlikePost = async (id) => {
-        try {
-            await axios.put(`${url}/posts/unlike/${id}`, null, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-            })
-        } catch(err) {
-            alert(err.message)
-        }
     }
 
     const postImagePreview = (e) => {
@@ -128,105 +85,6 @@ export default function Timeline({userprofile, username}) {
         } catch(err) {
             alert(err.message)
             setPostBtnText('Post')
-        }
-    }
-
-    const confirmDeleteComment = (postId, commentId) => {
-        Swal.fire({
-            title: 'Are you sure ?',
-            text: "You won't be able to revert this !",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: `Delete`,
-          }).then((result) => {
-            if(result.isConfirmed) {
-                deleteComment(postId, commentId)
-            }
-        })
-    }
-
-    const confirmDeletePost = (postId) => {
-        Swal.fire({
-            title: 'Are you sure ?',
-            text: "You won't be able to revert this !",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: `Delete`,
-          }).then((result) => {
-            if(result.isConfirmed) {
-                deletePost(postId)
-            }
-        })
-    }
-
-    const deleteComment = async (postId, commentId) => {
-        try {
-            await axios.put(`${url}/posts/uncomment/${postId}`, { commentId }, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }             
-                })
-                setPosts(newPosts)
-            })
-
-        } catch(err) {
-            alert(err.message)
-        }
-    }
-
-    const renderMultiplePostImages = (src) => {
-        const paths = src[0].split(",");
-        return paths.map(path => {
-            return <img className="home__feed__posts__image" src={url + '/' + path} key={path} alt={path}/>
-        })
-    }
-
-    const deletePost = async (id) => {
-        try {
-            await axios.delete(`${url}/posts/${id}`, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(response => {
-                if(response.status === 200) {
-                    getPosts()
-                    alert(response.data.msg)
-                }
-            })
-
-        } catch(err) {
-            alert(err.message)
-        }
-    }
-
-    const updateComment = async (postId, commentId, setOpen) => {
-        try {
-            await axios.put(`${url}/posts/comment/${postId}`, {commentId}, {
-                headers: {
-                    'x-auth-token' : localStorage.getItem('x-auth-token')
-                }
-            }).then(result => {
-                const newPosts = posts.map(data => {
-                    if(data._id === result.data._id) {
-                        return result.data
-                    } else {
-                        return data
-                    }
-                })
-                setPosts(newPosts)
-                setOpen(false)
-            })
-
-        } catch(err) {
-            alert(err.message)
-            setOpen(false)
         }
     }
 
@@ -380,12 +238,6 @@ export default function Timeline({userprofile, username}) {
                                         comments={post.comments}
                                         posts={posts}
                                         setPosts={setPosts}
-                                        confirmDeletePost={confirmDeletePost}
-                                        confirmDeleteComment={confirmDeleteComment}
-                                        likePost={likePost}
-                                        unlikePost={unlikePost}
-                                        renderMultiplePostImages={renderMultiplePostImages}
-                                        updateComment={updateComment}
                                         editPostModal={editPostModal}
                                     />
                                 )
