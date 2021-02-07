@@ -59,7 +59,7 @@ function Post(props) {
             alert(err.message)
         }
     }
-
+    
     return (
         <div className="row box-style mt-3" key={props.id}>
             <div className="col-md-12 d-flex align-items-center mt-2">
@@ -112,6 +112,7 @@ function Post(props) {
                         <img className="home__feed__posts__image" src={props.images} alt={props.images}/>
                     )
                 }
+                
             </div>
 
             <div className="col-md-12 d-flex mt-3 mb-2">
@@ -223,7 +224,7 @@ function Post(props) {
                 <Button onClick={handleClose} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={() => props.updateComment(postId, commentId)} color="primary" disabled={!commentText}> 
+                <Button onClick={() => props.updateComment(postId, commentId, setOpen)} color="primary" disabled={!commentText}> 
                     Update
                 </Button>
                 </DialogActions>

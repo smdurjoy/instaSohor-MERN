@@ -15,7 +15,7 @@ const Profile = (props) => {
     return (
       <Layout title={ userData.user.name }>
         <div className="container">
-          <ProfileTop name={ userData.user.name }/>
+          <ProfileTop user={ userData.user }/>
           <Content />
         </div>
       </Layout>

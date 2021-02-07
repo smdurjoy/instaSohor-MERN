@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './Profile.css'
 import IconButton from '@material-ui/core/IconButton'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
@@ -10,7 +10,11 @@ import insta from '../../assets/images/social/insta.png'
 import linkedin from '../../assets/images/social/in.png'
 import twitter from '../../assets/images/social/twitter.png'
 import { makeStyles } from '@material-ui/core/styles'
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import axios from 'axios'
+import url from '../../BackendUrl'
+import UserContext from '../../context/UserContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,8 +34,63 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProfileTop = (props) => {
+const ProfileTop = ({userprofile, user, setUser}) => {
   const classes = useStyles();
+  const { setUserData } = useContext(UserContext);
+
+  const followUser = async (followId) => {
+    try {
+        await axios.put(`${url}/users/follow`, {followId}, {
+            headers: {
+                'x-auth-token' : localStorage.getItem('x-auth-token')
+            }
+        }).then(response => {
+            // setUser((prevState)=> {
+            //   return {
+            //     followers:[...prevState.followers, response.data._id]
+            //   }
+            // })
+            setUser(response.data)
+            setUserData((prevState) => {
+              return {
+                ...prevState,
+                user:{
+                  ...prevState.user,
+                  following:[...prevState.user.following, response.data._id]
+                }
+              }
+            })
+        })
+
+    } catch(err) {
+        alert(err.message)
+    }
+  }
+
+  const unfollowUser = async (unfollowId) => {
+    try {
+        await axios.put(`${url}/users/unfollow`, {unfollowId}, {
+            headers: {
+                'x-auth-token' : localStorage.getItem('x-auth-token')
+            }
+        }).then(response => {
+            setUser(response.data)
+            setUserData((prevState) => {
+              const newFollowing= prevState.user.following.filter(item=> item != response.data._id)
+              return {
+                ...prevState,
+                user:{
+                  ...prevState.user,
+                  following:newFollowing
+                }
+              }
+            })
+        })
+
+    } catch(err) {
+        alert(err.message)
+    }
+  }
 
     return (
         <div className="cover_container">
@@ -67,20 +126,63 @@ const ProfileTop = (props) => {
                 </div>  
                 <div className="profile_picture"> 
                 <Avatar alt="Remy Sharp" src={profilePic} className={classes.large}/>
-                <h4 className="title mt-2">{ props.name }</h4>
+                <h4 className="title mt-2">{ user.name }</h4>
+
+                
+                  { !userprofile
+                    ? <></>
+                    : [
+                        user.followers && user.followers.includes(localStorage.getItem('user')) ? (
+                          <div>
+                            <Button className="button__background" onClick={() => unfollowUser(user._id)}>
+                              Unfollow
+                            </Button>
+                            <Button className="button__background ml-2">
+                              Message
+                            </Button>
+                          </div>
+                        ) : (
+                          <div>
+                            <Button className="button__background" onClick={() => followUser(user._id)}>
+                              Follow
+                            </Button>
+                            <Button className="button__background ml-2">
+                              Message
+                            </Button>
+                          </div>
+                        )
+                      ]
+                  }
+            
                 </div>
                 <div className="profile_counts">  
                 <div>
                     <h5>Posts</h5>
-                    <p>100</p>
+                    <p>0</p>
                 </div>
                 <div>
                     <h5>Followers</h5>
-                    <p>20</p>
+                    <p>
+                      {
+                        user.followers ? (
+                          user.followers.length
+                        ) : (
+                          <span>0</span>
+                        )
+                      }
+                    </p>
                 </div>
                 <div>
                     <h5>Following</h5>
-                    <p>12</p>
+                    <p>
+                      {
+                        user.following ? (
+                          user.following.length
+                        ) : (
+                          <span>0</span>
+                        )
+                      }
+                    </p>
                 </div>
                 </div>
             </div>

@@ -127,12 +127,12 @@ router.post('/isTokenValid', async (req, res) => {
 })
 
 router.get('/', auth, async (req, res) => {
-    const user = await User.findById(req.user).select('_id name username')
+    const user = await User.findById(req.user).select('-password')
     return res.json(user)
 })
 
 router.get('/:username', auth, async (req, res) => {
-    const user = await User.findOne({username: req.params.username}).select('_id name username')
+    const user = await User.findOne({username: req.params.username}).select('-password')
 
     if(!user)
     return res
@@ -140,6 +140,40 @@ router.get('/:username', auth, async (req, res) => {
         .json({ msg: 'No user found !' })
 
     return res.json(user)
+})
+
+router.put('/follow', auth, async (req, res) => {
+    try {
+        const updatedUser = await User.findByIdAndUpdate(req.body.followId, {
+            $push:{followers: req.user}
+        }, {new: true}).populate()
+        
+        await User.findByIdAndUpdate(req.user, {
+            $push:{following: req.body.followId}
+        })
+
+        return res.status(200).json(updatedUser)
+
+    } catch(err) {
+        return res.status(500).json({ error: err.message })
+    }
+})
+
+router.put('/unfollow', auth, async (req, res) => {
+    try {
+        const updatedUser = await User.findByIdAndUpdate(req.body.unfollowId, {
+            $pull:{followers: req.user}
+        }, {new: true})
+        
+        await User.findByIdAndUpdate(req.user, {
+            $pull:{following: req.body.unfollowId}
+        })
+
+        return res.status(200).json(updatedUser)
+
+    } catch(err) {
+        return res.status(500).json({ error: err.message })
+    }
 })
 
 module.exports = router 

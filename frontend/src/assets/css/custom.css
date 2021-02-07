@@ -48,6 +48,16 @@
     text-decoration: underline;
 }
 
+.button__background {
+    font-size: 12px !important;
+    background-color: #F5FBFF !important;
+    color: #50B4FC !important;
+    border-radius: 5px !important;  
+    padding: 8px !important;
+    font-weight: 800 !important;
+    padding: 2px 5px !important;
+}   
+
 @media (min-width: 768px) {
     .postCard {
         display: flex;

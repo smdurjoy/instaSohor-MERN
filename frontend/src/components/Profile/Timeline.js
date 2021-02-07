@@ -206,7 +206,7 @@ export default function Timeline({userprofile, username}) {
         }
     }
 
-    const updateComment = async (postId, commentId) => {
+    const updateComment = async (postId, commentId, setOpen) => {
         try {
             await axios.put(`${url}/posts/comment/${postId}`, {commentId}, {
                 headers: {
@@ -218,13 +218,15 @@ export default function Timeline({userprofile, username}) {
                         return result.data
                     } else {
                         return data
-                    }             
+                    }
                 })
                 setPosts(newPosts)
+                setOpen(false)
             })
 
         } catch(err) {
             alert(err.message)
+            setOpen(false)
         }
     }
 

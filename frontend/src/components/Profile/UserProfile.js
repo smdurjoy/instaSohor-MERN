@@ -27,8 +27,8 @@ const UserProfile = () => {
     return ( 
         <Layout title={ user.name }>
             <div className="container">
-                <ProfileTop name={ user.name }/>
-                <Content userprofile={true} username={params.username}/>
+                <ProfileTop userprofile={true} user={user} setUser={setUser} />
+                <Content userprofile={true} username={params.username} /> 
             </div>
         </Layout>
     );

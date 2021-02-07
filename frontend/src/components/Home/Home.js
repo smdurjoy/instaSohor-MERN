@@ -49,6 +49,7 @@ const Home = () => {
     }
 
     useEffect(() => {   
+        window.scrollTo(0, 0)
         getPosts()
     }, [])
 
@@ -238,7 +239,7 @@ const Home = () => {
         }
     }
 
-    const updateComment = async (postId, commentId) => {
+    const updateComment = async (postId, commentId, setOpen) => {
         try {
             await axios.put(`${url}/posts/comment/${postId}`, {commentId}, {
                 headers: {
@@ -253,10 +254,12 @@ const Home = () => {
                     }             
                 })
                 setPosts(newPosts)
+                setOpen(false)
             })
 
         } catch(err) {
             alert(err.message)
+            setOpen(false)
         }
     }
 

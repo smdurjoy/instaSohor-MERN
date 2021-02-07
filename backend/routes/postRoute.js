@@ -30,6 +30,9 @@ router.post('/new', auth, async (req, res) => {
                 path = images.path
             }
 
+            if(!images)
+                path = ''
+
             if(!fields.text)
             return res
                 .status(400)
