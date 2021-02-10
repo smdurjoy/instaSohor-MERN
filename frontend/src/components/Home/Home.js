@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../layouts/fulllayout'
 import { Redirect } from 'react-router-dom'
 import './Home.css';

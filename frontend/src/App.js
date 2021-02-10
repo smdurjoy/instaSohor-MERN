@@ -10,6 +10,7 @@ import url from './BackendUrl'
 import UserProfile from './components/Profile/UserProfile'
 import { PostProvider } from './context/PostContext'
 import FollowingPosts from './components/FollowingPosts/FollowingPosts'
+import Messages from './components/Messages/MessagePage'
 
 function App() {
     const [ userData, setUserData ] = useState({
@@ -53,6 +54,7 @@ function App() {
                         <Route exact path="/profile" component={Profile}/>
                         <Route path="/profile/:username" component={UserProfile}/>  
                         <Route path="/following-posts" component={FollowingPosts}/>  
+                        <Route path="/messages" component={Messages}/>  
                         <Route path="/signin" component={CheckSignin}/>
                         <Route path="/signup" component={Signup}/>
                     </Switch>
