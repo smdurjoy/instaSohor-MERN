@@ -53,7 +53,7 @@ const FollowingPosts = () => {
                                     )
                                 })
                             ) : (
-                                <div className="row box-style text-center mt-3 pt-3">
+                                <div className="row box-style text-center mt-3 pt-3" key="1">
                                     <h4 className="content__title ml-auto mr-auto">Loading ..</h4>
                                 </div>
                             )

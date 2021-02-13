@@ -107,20 +107,25 @@
 
 .chat__messages {
     flex: 1;
-    background-image: url('../../assets/images/chat-background.jfif');
+    background-image: url('../../assets/images/chat-bg.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    overflow: scroll;
+    overflow: auto;
 }
 
-.chat__messages::-webkit-scrollbar {
-    display: none;
+.chat__messages > ::-webkit-scrollbar {
+    display: none !important;
+}
+
+.chat__messages  {
+    overflow-y: hidden; 
+    overflow-x: hidden;
 }
 
 .chat__messages {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
 }
 
 .chat__header__title {
@@ -163,6 +168,7 @@
     position: absolute;
     bottom: -10px;
     right: 0;
+    white-space: nowrap;
 }
 
 .messages_sender {
@@ -181,6 +187,7 @@
 
 .messages_sender > small{
     right: 7px;
+    white-space: nowrap;
 }
 
 .message_photo{

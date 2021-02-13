@@ -76,7 +76,7 @@ const ProfileTop = ({userprofile, user, setUser}) => {
         }).then(response => {
             setUser(response.data)
             setUserData((prevState) => {
-              const newFollowing= prevState.user.following.filter(item=> item != response.data._id)
+              const newFollowing= prevState.user.following.filter(item=> item !== response.data._id)
               return {
                 ...prevState,
                 user:{

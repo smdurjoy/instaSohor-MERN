@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import Layout from '../../layouts/fulllayout'
 import ProfileTop from './ProfileTop';
 import Content from './Content';
@@ -23,6 +23,13 @@ const UserProfile = () => {
 
         getUser(params.username)
     }, [params.username])
+
+    const token = localStorage.getItem('x-auth-token');
+    if (!token) {
+        return (
+            <Redirect to="/signin" />
+        )
+    }
 
     return ( 
         <Layout title={ user.name }>
